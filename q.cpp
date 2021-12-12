@@ -24,14 +24,56 @@ const int mod = 1000000007;
 
 void solve()
 {
+	string S;
+	unordered_map<char,vi> indexSet;
+
+	priority_queue<pii> charCount;
+	for(int i = 0;i<26;i++){
+		charCount.push({0,i});
+	}
+	cin >> S;
+	vector<int> cnt(26,0);
+	for(int i = 0;i<S.length();i++){
+		cnt[S[i]-'a']++;
+		indexSet[S[i]].push_back(i);
+	}
+
+	for(int i = 0;i<26;i++){
+		charCount.push({cnt[i],i});
+	}
+
+
+	while(!charCount.empty()){
+		pii top1 = charCount.top();
+
+		charCount.pop();
+		if(charCount.empty()){
+			cout<<"IMPOSSIBLE"<<endl;
+			return;
+		}
+		pii top2 = charCount.top();
+		charCount.pop();
+
+		int ind1 = indexSet[top1.S + 'a'][indexSet[top1.S+ 'a'].size()-1];
+		int ind2 = indexSet[top2.S + 'a'][indexSet[top2.S+ 'a'].size()-1];
+		indexSet[top1.S+ 'a'].pop_back();
+		indexSet[top2.S+ 'a'].pop_back();
+
+		S[ind1] = top2.S + 'a';
+		S[ind2] = top1.S + 'a';
+
+		charCount.push({top1.first-1,top1.S});
+		charCount.push({top2.first-1,top2.S});
+	}
+	cout<<S<<endl;
 }
 
 int32_t main()
 {
 	ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
 	int t = 1;
-	// cin >> t;
-	deb(t);
+	cin >> t;
+	// deb(t);
 
 	while (t--)
 	{
